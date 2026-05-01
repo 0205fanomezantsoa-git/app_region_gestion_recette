@@ -1,0 +1,96 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\LigneVersementAgentVersRegisseurRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: LigneVersementAgentVersRegisseurRepository::class)]
+class LigneVersementAgentVersRegisseur
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTime $date = null;
+
+    #[ORM\Column]
+    private ?float $montant = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $typeVersement = null;
+
+    #[ORM\ManyToOne(inversedBy: 'ligneVersementAgentVersRegisseurs')]
+    private ?Agent $agent = null;
+
+    #[ORM\ManyToOne(inversedBy: 'ligneVersementAgentVersRegisseurs')]
+    private ?Regisseur $regisseur = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getDate(): ?\DateTime
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTime $date): static
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getMontant(): ?float
+    {
+        return $this->montant;
+    }
+
+    public function setMontant(float $montant): static
+    {
+        $this->montant = $montant;
+
+        return $this;
+    }
+
+    public function getTypeVersement(): ?string
+    {
+        return $this->typeVersement;
+    }
+
+    public function setTypeVersement(string $typeVersement): static
+    {
+        $this->typeVersement = $typeVersement;
+
+        return $this;
+    }
+
+    public function getAgent(): ?Agent
+    {
+        return $this->agent;
+    }
+
+    public function setAgent(?Agent $agent): static
+    {
+        $this->agent = $agent;
+
+        return $this;
+    }
+
+    public function getRegisseur(): ?Regisseur
+    {
+        return $this->regisseur;
+    }
+
+    public function setRegisseur(?Regisseur $regisseur): static
+    {
+        $this->regisseur = $regisseur;
+
+        return $this;
+    }
+}
