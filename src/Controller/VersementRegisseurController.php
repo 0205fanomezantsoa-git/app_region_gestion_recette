@@ -1,0 +1,72 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\LigneVersementRegisseurVersTresor;
+use App\Form\LigneVersementRegisseurType;
+use App\Repository\LigneVersementRegisseurVersTresorRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+final class VersementRegisseurController extends AbstractController
+{
+    #[Route('SGRM/versement/regisseur', name: 'app_versement_regisseur')]
+    public function index(LigneVersementRegisseurVersTresorRepository $repo): Response
+    {
+        $data = $repo->findJournalRegisseurTresor();
+
+        return $this->render('versement_regisseur/index.html.twig', [
+            'data' => $data
+        ]);
+    }
+
+     #[Route('SGRM/versement/regisseur/new', name: 'app_versement_regisseur_new')]
+    public function new(Request $request, EntityManagerInterface $em): Response
+    {
+        
+        $versementRegisseur = new LigneVersementRegisseurVersTresor;
+        $form = $this->createForm(LigneVersementRegisseurType::class, $versementRegisseur);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+             // 💰 Récupération des données
+            $regisseur = $versementRegisseur->getRegisseur();
+            $tresor = $versementRegisseur->getTresor();
+            $montant = $versementRegisseur->getMontant();
+
+            // 🔻 Déduction sur regisseur
+            $regisseur->setPortefeuille(
+                $regisseur->getPortefeuille() - $montant
+            );
+
+            // 🔺 Ajout sur tresor
+            $tresor->setPortefeuille(
+                $tresor->getPortefeuille() + $montant
+            );
+            $em->persist($versementRegisseur);
+            $em->flush();
+
+            $this->addFlash('success', 'Versement enregistré avec succès');
+            return $this->redirectToRoute('app_versement_regisseur_detail', [
+                'id' => $versementRegisseur->getId()
+            ]);
+        }
+        return $this->render('versement_regisseur/new.html.twig', [
+            'controller_name' => 'VersementRegisseurController',
+            'form' => $form
+        ]);
+    }
+
+    #[Route('SGRM/versement/regisseur/{id}', name: 'app_versement_regisseur_detail')]
+    public function detail(LigneVersementRegisseurVersTresor $versement): Response
+    {
+    return $this->render('versement_regisseur/detail.html.twig', [
+        'versement' => $versement,
+        'regisseur' => $versement->getRegisseur(),
+        'tresor' => $versement->getTresor(),
+    ]);
+    }
+}

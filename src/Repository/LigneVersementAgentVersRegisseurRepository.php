@@ -15,6 +15,83 @@ class LigneVersementAgentVersRegisseurRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, LigneVersementAgentVersRegisseur::class);
     }
+    public function getTotalToday()
+    {
+    $start = new \DateTime('today');
+    $end = new \DateTime('tomorrow');
+
+    return $this->createQueryBuilder('v')
+        ->select('SUM(v.montant)')
+        ->where('v.date >= :start')
+        ->andWhere('v.date < :end')
+        ->setParameter('start', $start)
+        ->setParameter('end', $end)
+        ->getQuery()
+        ->getSingleScalarResult() ?? 0;
+    }
+
+    public function getStatsLast7Days()
+    {
+        $result = $this->createQueryBuilder('v')
+            ->select('v.date, v.montant')
+            ->where('v.date >= :date')
+            ->setParameter('date', new \DateTime('-7 days'))
+            ->orderBy('v.date', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        // 🔥 regroupement par jour (IMPORTANT)
+        $data = [];
+
+        foreach ($result as $row) {
+            $date = $row['date']->format('Y-m-d');
+
+            if (!isset($data[$date])) {
+                $data[$date] = 0;
+            }
+
+            $data[$date] += $row['montant'];
+        }
+
+        // format final pour chart
+        $final = [];
+        foreach ($data as $date => $total) {
+            $final[] = [
+                'date' => $date,
+                'total' => $total
+            ];
+        }
+
+        return $final;
+    }
+
+    public function findJournalAgentRegisseur()
+    {
+        return $this->createQueryBuilder('v')
+            ->select('v.id AS id, v.date AS date, v.typeVersement AS type, a.nom AS agent, r.nom AS regisseur, v.montant')
+            ->join('v.agent', 'a')
+            ->join('v.regisseur', 'r')
+            ->orderBy('v.date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getEtatAgents($start, $end)
+    {
+        return $this->createQueryBuilder('v')
+            ->select('a.nom AS agent, l.nom AS localite, SUM(v.montant) AS total')
+            ->join('v.agent', 'a')
+            ->join('a.localite', 'l')
+            ->where('v.date >= :start')
+            ->andWhere('v.date < :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->groupBy('a.id')
+            ->addGroupBy('l.id')
+            ->orderBy('total', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 
     //    /**
     //     * @return LigneVersementAgentVersRegisseur[] Returns an array of LigneVersementAgentVersRegisseur objects

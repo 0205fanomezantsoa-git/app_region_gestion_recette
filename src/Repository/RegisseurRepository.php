@@ -16,6 +16,14 @@ class RegisseurRepository extends ServiceEntityRepository
         parent::__construct($registry, Regisseur::class);
     }
 
+    public function getTotalPortefeuille()
+    {
+    return $this->createQueryBuilder('r')
+        ->select('SUM(r.portefeuille)')
+        ->getQuery()
+        ->getSingleScalarResult() ?? 0;
+    }
+
     //    /**
     //     * @return Regisseur[] Returns an array of Regisseur objects
     //     */

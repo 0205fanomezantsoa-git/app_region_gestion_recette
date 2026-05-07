@@ -1,0 +1,277 @@
+{% extends "base.html.twig" %}
+{% block stylesheets %}
+    {{ parent() }}
+
+    <style>
+        .quittance-item {
+            transition: all 0.2s ease-in-out;
+            margin-bottom: 20px; /* 🔥 espace entre quittances */
+            border-radius: 10px;
+        }
+
+        .quittance-item:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        /* bouton ajouter à droite */
+        .btn-add-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        /* bouton enregistrer centré */
+        .btn-submit-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .btn-submit-wrapper button {
+            min-width: 200px;
+        }
+         .header-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+<div class="card">
+    <div class="card-body" style="height: 500px; overflow-y: auto;">
+
+        <h5 class="card-title fw-semibold mb-4">Insérer quittances</h5>
+
+        <div class="card">
+            <div class="card-body">
+
+                 <!-- INFO AGENT -->
+            <div class="header-box">
+                <strong>👤 Agent :</strong> {{ agent.nom }} <br>
+                <strong>📒 Carnet :</strong> {{ carnet.idCarnet }}
+            </div>
+                {{ form_start(form) }}
+                {# ================= PROTOTYPE ================= #}
+                {% set prototype %}
+                <div class="quittance-item border p-3 mb-3 rounded">
+
+                    <div class="row g-3">
+
+                        <!-- COL GAUCHE -->
+                        <div class="col-md-6">
+
+                            <div class="mb-2">
+                                {{ form_label(form.quittances.vars.prototype.numQuittance) }}
+                                {{ form_widget(form.quittances.vars.prototype.numQuittance) }}
+                                {{ form_errors(form.quittances.vars.prototype.numQuittance) }}
+                            </div>
+
+                            <div class="mb-2">
+                                {{ form_label(form.quittances.vars.prototype.dateUtilisation) }}
+                                {{ form_widget(form.quittances.vars.prototype.dateUtilisation) }}
+                                {{ form_errors(form.quittances.vars.prototype.dateUtilisation) }}
+                            </div>
+
+                            <div class="mb-2">
+                                {{ form_label(form.quittances.vars.prototype.nomClient) }}
+                                {{ form_widget(form.quittances.vars.prototype.nomClient) }}
+                                {{ form_errors(form.quittances.vars.prototype.nomClient) }}
+                            </div>
+
+                        </div>
+
+                        <!-- COL DROITE -->
+                        <div class="col-md-6">
+
+                            <div class="mb-2">
+                                {{ form_label(form.quittances.vars.prototype.produit) }}
+                                {{ form_widget(form.quittances.vars.prototype.produit) }}
+                                {{ form_errors(form.quittances.vars.prototype.produit) }}
+                            </div>
+
+                            <!-- 🔥 QUANTITÉ + UNITÉ ALIGNÉE PARFAITEMENT -->
+                            <div class="row align-items-end mb-2 g-2">
+
+                                <div class="col-8">
+                                    {{ form_label(form.quittances.vars.prototype.quantite) }}
+                                    {{ form_widget(form.quittances.vars.prototype.quantite) }}
+                                    {{ form_errors(form.quittances.vars.prototype.quantite) }}
+                                </div>
+
+                                <div class="col-4">
+                                    <label class="form-label mb-1">Unité</label>
+                                    <div class="form-control text-center bg-light unite-display"
+                                        style="height: 38px; display:flex; align-items:center; justify-content:center;">
+                                        -
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                {{ form_label(form.quittances.vars.prototype.montantTotal) }}
+                                {{ form_widget(form.quittances.vars.prototype.montantTotal) }}
+                                {{ form_errors(form.quittances.vars.prototype.montantTotal) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end mt-2">
+                        <button type="button" class="btn btn-danger btn-sm remove-item">
+                            ❌ Supprimer
+                        </button>
+                    </div>
+                </div>
+                {% endset %}
+                <div id="quittances"
+                     data-prototype="{{ prototype|e('html_attr') }}">
+
+                    {# ================= ITEMS EXISTANTS ================= #}
+                    {% for item in form.quittances %}
+                        <div class="quittance-item border p-3 mb-2">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(item.numQuittance) }}
+                                    {{ form_row(item.dateUtilisation) }}
+                                    {{ form_row(item.nomClient) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(item.produit) }}
+                                    <div class="mb-2">
+                                        <small class="text-muted">
+                                            Unité : <span class="unite-display">-</span>
+                                        </small>
+                                    </div>
+                                    {{ form_row(item.quantite) }}
+                                    {{ form_row(item.montantTotal) }}
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-danger btn-sm mt-2 remove-item">
+                                ❌ Supprimer
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="">
+                    <button type="button" id="add-item" class="btn btn-success">
+                        ➕ Ajouter
+                    </button>
+                </div>
+                <br><br>
+               <div class="text-center mt-4">
+                    <button class="btn btn-primary px-5">
+                        Enregistrer
+                    </button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const container = document.getElementById('quittances');
+    const addBtn = document.getElementById('add-item');
+
+    if (!container || !addBtn) return;
+
+    let index = container.querySelectorAll('.quittance-item').length;
+
+    // =====================================================
+    // 🟢 AJOUT QUITTANCE
+    // =====================================================
+    addBtn.addEventListener('click', function () {
+
+        const prototype = container.dataset.prototype;
+        if (!prototype) return;
+
+        const newForm = prototype.replace(/__name__/g, index++);
+        const wrapper = document.createElement('div');
+
+        wrapper.innerHTML = newForm;
+        const newItem = wrapper.firstElementChild;
+
+        container.appendChild(newItem);
+
+        // initialisation visuelle si produit déjà sélectionné
+        updateRow(newItem);
+    });
+
+    // =====================================================
+    // 🔴 SUPPRESSION QUITTANCE
+    // =====================================================
+    container.addEventListener('click', function (e) {
+
+        const btn = e.target.closest('.remove-item');
+        if (!btn) return;
+
+        btn.closest('.quittance-item')?.remove();
+    });
+
+    // =====================================================
+    // ⚡ EVENT GLOBAL (CHANGE + INPUT)
+    // =====================================================
+    container.addEventListener('change', handleUpdate);
+    container.addEventListener('input', handleUpdate);
+
+    function handleUpdate(e) {
+
+        const row = e.target.closest('.quittance-item');
+        if (!row) return;
+
+        if (
+            e.target.classList.contains('produit-select') ||
+            e.target.classList.contains('quantite-input')
+        ) {
+            updateRow(row);
+        }
+    }
+
+    // =====================================================
+    // 🔥 UPDATE UNE LIGNE (UNITE + TOTAL)
+    // =====================================================
+    function updateRow(row) {
+
+        const produitSelect = row.querySelector('.produit-select');
+        const quantiteInput = row.querySelector('.quantite-input');
+        const totalInput = row.querySelector('.total-input');
+        const uniteDisplay = row.querySelector('.unite-display');
+
+        if (!produitSelect || !quantiteInput || !totalInput) return;
+
+        const value = produitSelect.value;
+
+        // =====================================================
+        // 📦 OPTION SÉLECTIONNÉE (FIABLE)
+        // =====================================================
+        const option = produitSelect.querySelector(`option[value="${value}"]`);
+
+        if (!option) return;
+
+        // =====================================================
+        // 📏 UNITE
+        // =====================================================
+        if (uniteDisplay) {
+            uniteDisplay.textContent = option.getAttribute('data-unite') || '-';
+        }
+
+        // =====================================================
+        // 💰 TOTAL (prixUnitaire × quantité)
+        // =====================================================
+        const prix = parseFloat(option.getAttribute('data-prix') || 0);
+        const quantite = parseFloat(quantiteInput.value || 0);
+
+        const total = prix * quantite;
+
+        totalInput.value = isNaN(total) ? 0 : total.toFixed(2);
+    }
+
+});
+</script>
+{% endblock %}

@@ -35,6 +35,15 @@ class Quittance
     #[ORM\ManyToOne(inversedBy: 'quittance')]
     private ?Produit $produit = null;
 
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $statut = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $ecart = null;
+
+    #[ORM\ManyToOne(inversedBy: 'quittances')]
+    private ?LigneVersementAgentVersRegisseur $versement = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +129,42 @@ class Quittance
     public function setProduit(?Produit $produit): static
     {
         $this->produit = $produit;
+
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?string $statut): static
+    {
+        $this->statut = $statut;
+
+        return $this;
+    }
+
+    public function getEcart(): ?float
+    {
+        return $this->ecart;
+    }
+
+    public function setEcart(?float $ecart): static
+    {
+        $this->ecart = $ecart;
+
+        return $this;
+    }
+
+    public function getVersement(): ?LigneVersementAgentVersRegisseur
+    {
+        return $this->versement;
+    }
+
+    public function setVersement(?LigneVersementAgentVersRegisseur $versement): static
+    {
+        $this->versement = $versement;
 
         return $this;
     }

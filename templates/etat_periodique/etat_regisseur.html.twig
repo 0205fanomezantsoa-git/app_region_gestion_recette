@@ -1,0 +1,110 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+<div class="container-fluid py-3">
+
+    <h3 class="mb-4">📊 État périodique des régisseurs</h3>
+
+    <!-- FILTRE -->
+    <form method="get" class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <select name="month" class="form-select">
+                <option value="">Mois</option>
+                {% for i in 1..12 %}
+                    <option value="{{ i }}"
+                        {% if app.request.get('month') == i %}selected{% endif %}>
+                            {{ i }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <input type="number"
+                   name="year"
+                   class="form-control"
+                   placeholder="Année"
+                   value="{{ app.request.get('year') }}">
+        </div>
+
+        <div class="col-md-4">
+            <button class="btn btn-primary w-100">Filtrer</button>
+        </div>
+
+    </form>
+
+    <!-- TABLE -->
+    <div class="card p-3">
+
+        <h5>🏆 Classement des régisseurs</h5>
+
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Régisseur</th>
+                    <th>Total versé au trésor</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for d in data %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ d.regisseur }}</td>
+                        <td class="fw-bold text-primary">
+                            {{ d.total|number_format(0, ',', ' ') }} Ar
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">
+                            Aucun résultat pour cette période
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- CHART -->
+    <div class="card mt-4 p-3">
+        <h5>📊 Graphique classement</h5>
+        <canvas id="chartRegisseurs"></canvas>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const labels = {{ labels|json_encode|raw }};
+const values = {{ values|json_encode|raw }};
+
+new Chart(document.getElementById('chartRegisseurs'), {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Montant versé (Ar)',
+            data: values,
+            borderWidth: 1
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        responsive: true
+    }
+});
+</script>
+
+{% endblock %}

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LigneVersementAgentVersRegisseurRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -28,6 +30,17 @@ class LigneVersementAgentVersRegisseur
 
     #[ORM\ManyToOne(inversedBy: 'ligneVersementAgentVersRegisseurs')]
     private ?Regisseur $regisseur = null;
+
+    /**
+     * @var Collection<int, Quittance>
+     */
+    #[ORM\OneToMany(targetEntity: Quittance::class, mappedBy: 'versement')]
+    private Collection $quittances;
+
+    public function __construct()
+    {
+        $this->quittances = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -90,6 +103,36 @@ class LigneVersementAgentVersRegisseur
     public function setRegisseur(?Regisseur $regisseur): static
     {
         $this->regisseur = $regisseur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Quittance>
+     */
+    public function getQuittances(): Collection
+    {
+        return $this->quittances;
+    }
+
+    public function addQuittance(Quittance $quittance): static
+    {
+        if (!$this->quittances->contains($quittance)) {
+            $this->quittances->add($quittance);
+            $quittance->setVersement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuittance(Quittance $quittance): static
+    {
+        if ($this->quittances->removeElement($quittance)) {
+            // set the owning side to null (unless already changed)
+            if ($quittance->getVersement() === $this) {
+                $quittance->setVersement(null);
+            }
+        }
 
         return $this;
     }

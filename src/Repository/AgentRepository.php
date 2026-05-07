@@ -15,7 +15,13 @@ class AgentRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Agent::class);
     }
-
+    public function getTotalPortefeuille()
+    {
+    return $this->createQueryBuilder('a')
+        ->select('SUM(a.portefeuille)')
+        ->getQuery()
+        ->getSingleScalarResult() ?? 0;
+    }
     //    /**
     //     * @return Agent[] Returns an array of Agent objects
     //     */

@@ -1,89 +1,93 @@
-    <!-- Sidebar Start -->
-    <aside class="left-sidebar">
-    <!-- Sidebar scroll-->
-    <div>
-        <div class="brand-logo d-flex align-items-center justify-content-between">
-            <a href="#" class="text-nowrap logo-img">
-                <img src="{{asset('assets/images/logos/logo.png')}}" width="100" alt=""/> 
-            </a>
-            <strong style="color : green; font-size : 18px; font-weight: 700; letter-spacing: 1px; text-decoration: underline; text-shadow 2px 2px 4px rgba(0,0,0,0,3);">
-                SGP MELAKY
-            </strong>
-            <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
-                <i class="ti ti-x fs-6"></i>
+<!-- Sidebar Start -->
+<aside class="left-sidebar bg-white shadow-sm">
+
+    <div class="p-3">
+
+        <!-- LOGO + NOM -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="d-flex align-items-center gap-2">
+                <img src="{{ asset('assets/images/logos/logo.png') }}" width="50" alt="">
+                <div>
+                    <h6 class="mb-0 fw-bold text-success">SGRM</h6>
+                    <small class="text-muted">Système de Gestion des recettes Melaky</small>
+                </div>
+            </div>
+
+            <div class="d-xl-none cursor-pointer" id="sidebarCollapse">
+                <i class="ti ti-x"></i>
             </div>
         </div>
-        <!-- Sidebar navigation-->
-        <nav class="sidebar-nav">
-        <ul id="sidebarnav">
-            <li class="nav-small-cap">
-                <i class="ti ti-menu"></i>
-                <span class="hide-menu">Menu</span>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" 
-                href="" aria-expanded="false">
-                    <i class="ti ti-home"></i>
-                    <span class="hide-menu">Tableau de board</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link " 
-                href="" aria-expanded="false">
-                    <i class="ti ti-badge"></i>
-                    <span class="hide-menu">Statut employé</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link " href="" aria-expanded="false">
-                    <i class="ti ti-chart-line"></i>
-                    <span class="hide-menu">Indice</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link " href="" aria-expanded="false">
-                    <i class="ti ti-id-badge"></i>
-                    <span class="hide-menu">Poste</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link " href="" aria-expanded="false">
-                    <i class="ti ti-plus"></i>
-                    <span class="hide-menu">Indamnité</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link " href="" aria-expanded="false">
-                    <i class="ti ti-user"></i>
-                    <span class="hide-menu">Employé</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link justify-content-between has-arrow" href="javascript:void(0)" aria-expanded="false">
-                    <div class="d-flex align-items-center gap-3">
-                        <span class="d-flex">
-                            <i class="ti ti-layout-grid"></i>
-                        </span>
-                        <span class="hide-menu">Etat de paie</span>
-                    </div>
-                </a>
-                <ul aria-expanded="false" class="collapse first-level">
-                    <li class="sidebar-item">
-                        <a class="sidebar-link justify-content-between"  
-                            href="">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="round-16 d-flex align-items-center justify-content-center">
-                                    <i class="ti ti-circle"></i>
-                                </div>
-                                <span class="hide-menu">Chef de service</span>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </li>    
+
+        <!-- MENU -->
+        <nav>
+
+            <ul class="nav flex-column">
+
+                <!-- DASHBOARD -->
+                <li class="nav-item mb-2">
+                    <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2
+                        {{ app.request.attributes.get('_route') == 'app_default' ? 'bg-light fw-bold' : '' }}"
+                       href="{{ path('app_default') }}">
+                        <i class="ti ti-layout-dashboard"></i>
+                        <span>Tableau de bord</span>
+                    </a>
+                </li>
+
+                <!-- ================= AGENTS ================= -->
+                <li class="text-uppercase text-muted small mt-3 mb-2 px-3">
+                    Agents & Quittances
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded
+                        {{ app.request.attributes.get('_route') in ['app_agent','app_quittance_new'] ? 'bg-light fw-bold' : '' }}"
+                       href="{{ path('app_agent') }}">
+                        <i class="ti ti-users"></i>
+                        <span>Agents percepteurs</span>
+                    </a>
+                </li>
+
+                <!-- ================= VERSEMENTS ================= -->
+                <li class="text-uppercase text-muted small mt-4 mb-2 px-3">
+                    Flux financiers
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded
+                        {{ app.request.attributes.get('_route') in ['app_versement_agent', 'app_versement_agent_new','app_versement_agent_detail'] ? 'bg-light fw-bold' : '' }}"
+                        href="{{ path('app_versement_agent') }}">
+                        <i class="ti ti-arrow-right-circle"></i>
+                        <span>Agent → Régisseur</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded
+                        {{ app.request.attributes.get('_route') in ['app_versement_regisseur', 'app_versement_regisseur_new','app_versement_regisseur_detail'] ? 'bg-light fw-bold' : '' }}"
+                       href="{{ path('app_versement_regisseur') }}">
+                        <i class="ti ti-building-bank"></i>
+                        <span>Régisseur → Trésor</span>
+                    </a>
+                </li>
+                <!-- ================= AGENTS ================= -->
+                <li class="text-uppercase text-muted small mt-3 mb-2 px-3">
+                    Etat périodique
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded
+                        {{ app.request.attributes.get('_route') == 'app_etat_periodique' ? 'bg-light fw-bold' : '' }}"
+                       href="{{ path('app_etat_periodique') }}">
+                        <i class="ti ti-calendar"></i>
+                        <span>Pour les agents</span>
+                    </a>
+                    <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded
+                        {{ app.request.attributes.get('_route') == 'app_etat_regisseurs' ? 'bg-light fw-bold' : '' }}"
+                       href="{{ path('app_etat_regisseurs') }}">
+                        <i class="ti ti-calendar"></i>
+                        <span>Pour les régisseurs</span>
+                    </a>
+                </li>
+            </ul>
         </nav>
-        <!-- End Sidebar navigation -->
     </div>
-    <!-- End Sidebar scroll-->
-    </aside>
-    <!--  Sidebar End -->
+</aside>
+<!-- Sidebar End -->

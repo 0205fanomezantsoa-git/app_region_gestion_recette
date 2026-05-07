@@ -1,0 +1,94 @@
+{% extends "base.html.twig" %}
+
+{% block stylesheets %}
+{{ parent() }}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid py-3">
+    <div class="card p-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h3 class="mb-0">📊 Journal Agent → Régisseur</h3>
+                <small class="text-muted">Historique des versements</small>
+            </div>
+
+            <div class="d-flex gap-2">
+                <a href="{{ path('app_versement_agent_new') }}" class="btn btn-success">
+                    ➕ Nouveau
+                </a>
+
+                <a href="{{ path('app_default') }}" class="btn btn-outline-secondary">
+                    ⬅ Retour
+                </a>
+            </div>
+        </div>
+        <table id="tableAgentReg" class="table table-striped table-bordered">
+
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Agent</th>
+                    <th>Régisseur</th>
+                    <th>Type</th>
+                    <th>Montant</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for d in data %}
+                    <tr>
+                        <td>{{ d.date|date('Y-m-d H:i') }}</td>
+                        <td>{{ d.agent }}</td>
+                        <td>{{ d.regisseur }}</td>
+                        <td>{{ d.type }}</td>
+                        <td class="fw-bold text-success">
+                            {{ d.montant|number_format(0, ',', ' ') }} Ar
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ path('app_versement_agent_detail', {id: d.id}) }}"
+                            class="btn btn-sm btn-info"
+                            title="Voir détail">
+                                👁
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    $('#tableAgentReg').DataTable({
+        responsive: true,
+        pageLength: 10,
+        language: {
+            search: "🔍 Recherche:",
+            lengthMenu: "Afficher _MENU_ lignes",
+            info: "Affichage _START_ à _END_ sur _TOTAL_",
+            paginate: {
+                previous: "Précédent",
+                next: "Suivant"
+            }
+        }
+    });
+});
+</script>
+
+{% endblock %}

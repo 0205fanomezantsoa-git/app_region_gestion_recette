@@ -1,0 +1,98 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+<div class="container-fluid py-3">
+
+    <h3 class="mb-4">📊 État périodique des agents</h3>
+
+    <!-- FILTRE -->
+    <form method="get" class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <select name="month" class="form-select">
+                <option value="">Mois</option>
+                {% for i in 1..12 %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <input type="number" name="year" class="form-control" placeholder="Année">
+        </div>
+
+        <div class="col-md-4">
+            <button class="btn btn-primary w-100">Filtrer</button>
+        </div>
+
+    </form>
+
+    <!-- TABLE -->
+    <div class="card p-3">
+
+        <h5>🏆 Classement des agents</h5>
+
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Agent</th>
+                    <th>Localité</th>
+                    <th>Total recettes</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for d in data %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ d.agent }}</td>
+                        <td>{{ d.localite }}</td>
+                        <td class="fw-bold text-success">
+                            {{ d.total|number_format(0, ',', ' ') }} Ar
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- CHART -->
+    <div class="card mt-4 p-3">
+        <h5>📊 Graphique classement</h5>
+        <canvas id="chartAgents"></canvas>
+    </div>
+
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const labels = {{ labels|json_encode|raw }};
+const values = {{ values|json_encode|raw }};
+
+new Chart(document.getElementById('chartAgents'), {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Recettes (Ar)',
+            data: values,
+            borderWidth: 1
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        responsive: true
+    }
+});
+</script>
+
+{% endblock %}

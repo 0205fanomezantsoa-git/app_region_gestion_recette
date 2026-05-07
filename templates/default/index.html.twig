@@ -1,17 +1,95 @@
 {% extends "base.html.twig" %}
+
 {% block body %}
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-md-flex align-items-center">    
-                    <div>
-                      <h4 class="card-title">Tableau de board</h4>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <img src="{{asset('assets/images/logos/logo.png')}}" width="450" alt=""/>
-                </div>
+
+<div class="container-fluid py-3">
+
+    <h3 class="mb-4 fw-bold">📊 Tableau de bord SGRM</h3>
+
+    <!-- CARDS -->
+    <div class="row g-3">
+
+        <div class="col-md-3">
+            <div class="card bg-primary text-white p-3">
+                <h6>Total général</h6>
+                <h4>{{ totalGeneral|number_format(0, ',', ' ') }} Ar</h4>
             </div>
         </div>
-    </div>                      
+
+        <div class="col-md-3">
+            <div class="card bg-success text-white p-3">
+                <h6>Agents</h6>
+                <h4>{{ nbAgents }}</h4>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-warning p-3">
+                <h6>Régisseurs</h6>
+                <h4>{{ nbRegisseurs }}</h4>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-danger text-white p-3">
+                <h6>Carnets actifs</h6>
+                <h4>{{ nbCarnets }}</h4>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FLUX -->
+    <div class="row mt-4">
+
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h6>Agent → Régisseur (Aujourd’hui)</h6>
+                <h4 class="text-success">{{ totalVAR }} Ar</h4>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h6>Régisseur → Trésor (Aujourd’hui)</h6>
+                <h4 class="text-primary">{{ totalVRT }} Ar</h4>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- GRAPH -->
+    <div class="card mt-4 p-3">
+        <h6>📈 Évolution des versements (7 jours)</h6>
+        <canvas id="chart"></canvas>
+    </div>
+
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const stats = {{ stats|json_encode|raw }};
+
+const labels = stats.map(s => s.date);
+const data = stats.map(s => s.total);
+
+new Chart(document.getElementById('chart'), {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Montant (Ar)',
+            data: data,
+            borderWidth: 2,
+            fill: false
+        }]
+    }
+});
+</script>
+
 {% endblock %}

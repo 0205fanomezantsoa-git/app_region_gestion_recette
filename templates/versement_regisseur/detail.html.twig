@@ -1,0 +1,72 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+<div class="container-fluid">
+
+    <div class="card shadow-sm">
+        <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+
+            <h4 class="fw-bold mb-4">
+                📊 Détail du versement Régisseur → Trésor
+            </h4>
+
+            <!-- Montant -->
+            <div class="alert alert-info">
+                💰 Montant versé :
+                <strong>{{ versement.montant }} Ar</strong>
+            </div>
+
+            <div class="row">
+
+                <!-- REGISSEUR -->
+                <div class="col-md-6">
+                    <div class="card border-warning shadow-sm">
+                        <div class="card-header bg-warning text-dark fw-bold">
+                            👤 Régisseur concerné
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Nom :</strong> {{ regisseur.nom }}</p>
+                            <p>
+                                <strong>Solde :</strong>
+                                <span class="badge bg-primary">
+                                    {{ regisseur.portefeuille }} Ar
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TRESOR -->
+                <div class="col-md-6">
+                    <div class="card border-success shadow-sm">
+                        <div class="card-header bg-success text-white fw-bold">
+                            🏦 Trésor concerné
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Nom :</strong> {{ tresor.nom }}</p>
+                            <p>
+                                <strong>Solde :</strong>
+                                <span class="badge bg-success">
+                                    {{ tresor.portefeuille }} Ar
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer actions -->
+            <div class="mt-4 d-flex justify-content-between">
+                <a href="{{ path('app_default') }}" class="btn btn-secondary">
+                    ⬅ Retour
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+<div class="container-fluid py-3">
+
+    <div class="card shadow border-0">
+
+        <div class="card-body" style="max-height: 600px; overflow-y: auto;">
+
+            <!-- TITRE -->
+            <div class="mb-4">
+                <h2 class="fw-bold text-primary">
+                    🏦 Ajouter versement Régisseur → Trésor
+                </h2>
+                <p class="text-muted mb-0">
+                    Enregistrement d’un transfert de fonds vers le trésor public
+                </p>
+            </div>
+
+            <!-- FORM -->
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    {{ form_start(form) }}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            {{ form_row(form.regisseur) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.tresor) }}
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    <!-- SECTION 2 -->
+                    <h5 class="text-secondary mb-3">💸 Détails du versement</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            {{ form_row(form.montant) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.date) }}
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

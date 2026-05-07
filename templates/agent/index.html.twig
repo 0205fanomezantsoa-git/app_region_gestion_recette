@@ -1,0 +1,139 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+<div class="container-fluid py-3">
+
+    <div class="card shadow border-0">
+
+        <div class="card-body" style="max-height: 650px; overflow-y: auto;">
+
+            <!-- HEADER -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <div>
+                    <h3 class="fw-bold text-primary mb-0">
+                        📋 Liste des agents percepteurs
+                    </h3>
+                    <small class="text-muted">
+                        Gestion des agents et suivis des carnets de quittances
+                    </small>
+                </div>
+            </div>
+
+            <!-- TABLE -->
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle text-nowrap">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>👤 Agent</th>
+                            <th>📍 Localité</th>
+                            <th>📒 Carnet quittance</th>
+                            <th>📒 Reste</th>
+                            <th>🏦 Régisseur</th>
+                            <th>💰 Solde</th>
+                            <th>⚙️ Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for agent in agents %}
+
+                            {# carnet actif #}
+                            {% set hasCarnet = false %}
+
+                            {% for carnetQuittance in agent.carnetQuittances %}
+                                {% if carnetQuittance.statut == "En cours" %}
+                                    {% set hasCarnet = true %}
+                                {% endif %}
+                            {% endfor %}
+
+                            <tr>
+
+                                <!-- AGENT -->
+                                <td>
+                                    <div>
+                                        <h6 class="fw-bold mb-0">{{ agent.nom }}</h6>
+                                        <small class="text-muted">📞 {{ agent.telephone }}</small>
+                                    </div>
+                                </td>
+
+                                <!-- LOCALITE -->
+                                <td>
+                                    <span class="badge bg-secondary">
+                                        {{ agent.localite.nom }}
+                                    </span>
+                                </td>
+
+                                <!-- CARNET -->
+                                <td>
+                                    {% if hasCarnet %}
+
+                                        {% for carnetQuittance in agent.carnetQuittances %}
+                                            {% if carnetQuittance.statut == "En cours" %}
+                                                <span class="badge bg-warning">
+                                                    {{ carnetQuittance.idCarnet }} (en cours)
+                                                </span>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    {% else %}
+                                        <span class="badge bg-danger">
+                                            Épuisé
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-dark">
+                                        {{ agent.carnetQuittances|last.nbQuittanceRestant }}
+                                    </span>
+                                </td>
+
+                                <!-- REGISSEUR -->
+                                <td>
+                                    <span class="fw-semibold">
+                                        {{ agent.regisseur.nom }}
+                                    </span>
+                                </td>
+
+                                <!-- SOLDE -->
+                                <td>
+                                    <span class="badge bg-primary fs-6">
+                                        {{ agent.portefeuille|number_format(2, ',', ' ') }} Ar
+                                    </span>
+                                </td>
+
+                                <!-- ACTION -->
+                                <td>
+
+                                    {% if hasCarnet %}
+                                        <a href="{{ path('app_quittance_new', {id: agent.id}) }}"
+                                           class="btn btn-sm btn-success">
+                                            ➕ Quittance
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Aucune action</span>
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

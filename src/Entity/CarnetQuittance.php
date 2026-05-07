@@ -46,6 +46,9 @@ class CarnetQuittance
     #[ORM\OneToMany(targetEntity: Quittance::class, mappedBy: 'carnetQuittance')]
     private Collection $quittances;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $nbQuittanceRestant = null;
+
     public function __construct()
     {
         $this->quittances = new ArrayCollection();
@@ -178,6 +181,18 @@ class CarnetQuittance
                 $quittance->setCarnetQuittance(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNbQuittanceRestant(): ?int
+    {
+        return $this->nbQuittanceRestant;
+    }
+
+    public function setNbQuittanceRestant(?int $nbQuittanceRestant): static
+    {
+        $this->nbQuittanceRestant = $nbQuittanceRestant;
 
         return $this;
     }
