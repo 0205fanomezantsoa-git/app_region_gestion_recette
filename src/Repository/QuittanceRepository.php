@@ -16,6 +16,21 @@ class QuittanceRepository extends ServiceEntityRepository
         parent::__construct($registry, Quittance::class);
     }
 
+    public function findNonVerseByAgent(int $agentId): array
+    {
+        return $this->createQueryBuilder('q')
+            ->join('q.carnetQuittance', 'c')
+            ->join('c.agent', 'a')
+            ->where('a.id = :agent')
+            ->andWhere('q.statut = :statut')
+            ->setParameter('agent', $agentId)
+            ->setParameter('statut', 'non_versé')
+            ->orderBy('q.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
     //    /**
     //     * @return Quittance[] Returns an array of Quittance objects
     //     */

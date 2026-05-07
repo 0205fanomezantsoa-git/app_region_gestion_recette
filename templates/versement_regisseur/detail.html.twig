@@ -2,31 +2,54 @@
 
 {% block body %}
 
-<div class="container-fluid">
+<div class="container-fluid py-3">
 
     <div class="card shadow-sm">
-        <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+        <div class="card-body" style="max-height: 600px; overflow-y: auto;">
 
             <h4 class="fw-bold mb-4">
                 📊 Détail du versement Régisseur → Trésor
             </h4>
 
-            <!-- Montant -->
+            <!-- 🔥 Résumé financier -->
             <div class="alert alert-info">
+
                 💰 Montant versé :
-                <strong>{{ versement.montant }} Ar</strong>
+                <strong>{{ versement.montant ?? 0 }} Ar</strong> |
+
+                📊 Écart :
+
+                {% if versement.ecart is null %}
+                    <span class="badge bg-secondary">Non calculé</span>
+
+                {% elseif versement.ecart == 0 %}
+                    <span class="badge bg-success">0 Ar (OK)</span>
+
+                {% elseif versement.ecart > 0 %}
+                    <span class="badge bg-warning text-dark">
+                        +{{ versement.ecart }} Ar (Excédent)
+                    </span>
+
+                {% else %}
+                    <span class="badge bg-danger">
+                        {{ versement.ecart }} Ar (Déficit)
+                    </span>
+                {% endif %}
+                | 📅 Date :
+                <strong>{{ versement.date|date('d/m/Y') }}</strong>
             </div>
-
             <div class="row">
-
-                <!-- REGISSEUR -->
+                <!-- 👤 REGISSEUR -->
                 <div class="col-md-6">
                     <div class="card border-warning shadow-sm">
                         <div class="card-header bg-warning text-dark fw-bold">
                             👤 Régisseur concerné
                         </div>
                         <div class="card-body">
-                            <p><strong>Nom :</strong> {{ regisseur.nom }}</p>
+                            <p>
+                                <strong>Nom :</strong>
+                                {{ regisseur.nom }}
+                            </p>
                             <p>
                                 <strong>Solde :</strong>
                                 <span class="badge bg-primary">
@@ -37,31 +60,68 @@
                     </div>
                 </div>
 
-                <!-- TRESOR -->
+                <!-- 🏦 TRESOR -->
                 <div class="col-md-6">
+
                     <div class="card border-success shadow-sm">
+
                         <div class="card-header bg-success text-white fw-bold">
                             🏦 Trésor concerné
                         </div>
+
                         <div class="card-body">
-                            <p><strong>Nom :</strong> {{ tresor.nom }}</p>
+
+                            <p>
+                                <strong>Nom :</strong>
+                                {{ tresor.nom }}
+                            </p>
+
                             <p>
                                 <strong>Solde :</strong>
                                 <span class="badge bg-success">
                                     {{ tresor.portefeuille }} Ar
                                 </span>
                             </p>
+
                         </div>
+
                     </div>
+
                 </div>
 
             </div>
 
-            <!-- Footer actions -->
+            <!-- 🔥 Analyse écart -->
+            <div class="mt-3">
+
+                {% if versement.ecart is not null and versement.ecart != 0 %}
+
+                    <div class="alert alert-danger">
+                        ⚠ Attention : un écart a été détecté lors du versement.
+                        Vérification comptable recommandée.
+                    </div>
+
+                {% else %}
+
+                    <div class="alert alert-success">
+                        ✔ Versement équilibré (aucune anomalie détectée)
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- 🔙 Actions -->
             <div class="mt-4 d-flex justify-content-between">
+
                 <a href="{{ path('app_default') }}" class="btn btn-secondary">
                     ⬅ Retour
                 </a>
+
+                <a href="{{ path('app_versement_regisseur') }}" class="btn btn-primary">
+                    📊 Liste des versements
+                </a>
+
             </div>
 
         </div>

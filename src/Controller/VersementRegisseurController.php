@@ -26,36 +26,39 @@ final class VersementRegisseurController extends AbstractController
      #[Route('SGRM/versement/regisseur/new', name: 'app_versement_regisseur_new')]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
-        
-        $versementRegisseur = new LigneVersementRegisseurVersTresor;
+        $versementRegisseur = new LigneVersementRegisseurVersTresor();
+
         $form = $this->createForm(LigneVersementRegisseurType::class, $versementRegisseur);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-             // 💰 Récupération des données
+
             $regisseur = $versementRegisseur->getRegisseur();
             $tresor = $versementRegisseur->getTresor();
             $montant = $versementRegisseur->getMontant();
 
-            // 🔻 Déduction sur regisseur
-            $regisseur->setPortefeuille(
-                $regisseur->getPortefeuille() - $montant
-            );
+            // 📊 valeur avant opération (audit)
+            $ancienSolde = $regisseur->getPortefeuille();
 
-            // 🔺 Ajout sur tresor
-            $tresor->setPortefeuille(
-                $tresor->getPortefeuille() + $montant
-            );
+            // 🔻 mise à jour
+            $regisseur->setPortefeuille($ancienSolde - $montant);
+            $tresor->setPortefeuille($tresor->getPortefeuille() + $montant);
+
+            $ecart = ($ancienSolde - $montant);
+
+            $versementRegisseur->setEcart($ecart);
+
             $em->persist($versementRegisseur);
             $em->flush();
 
             $this->addFlash('success', 'Versement enregistré avec succès');
+
             return $this->redirectToRoute('app_versement_regisseur_detail', [
                 'id' => $versementRegisseur->getId()
             ]);
         }
+
         return $this->render('versement_regisseur/new.html.twig', [
-            'controller_name' => 'VersementRegisseurController',
             'form' => $form
         ]);
     }

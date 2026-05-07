@@ -1,23 +1,39 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-<div class="container-fluid">
-    <div class="card shadow-sm">
-      <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+<div class="container-fluid py-3">
+    <div class="card p-3">
+        <div class="card-body" style="max-height: 700px; overflow-y: auto;">
             <h4 class="fw-bold mb-4">
                 📊 Détail du versement Agent → Régisseur
             </h4>
-            <!-- Montant -->
+
+            <!-- 🔥 Résumé financier -->
             <div class="alert alert-info">
                 💰 Montant versé :
-                <strong>{{ versement.montant }} Ar</strong> | 
-                                <strong>Type versement :</strong>
-                                <span class="badge bg-warning">
-                                    {{ versement.typeVersement }} 
-                                </span>
+                <strong>{{ versement.montant }} Ar</strong> |
+
+                📊 Écart :
+                <strong>
+                    {% if versement.ecart is not null %}
+                        {{ versement.ecart }} Ar
+                    {% else %}
+                        0 Ar
+                    {% endif %}
+                </strong> |
+
+                🧾 Type :
+                <span class="badge bg-warning">
+                    {{ versement.typeVersement }}
+                </span>
+
+                | 📅 Date :
+                <strong>{{ versement.date|date('d/m/Y') }}</strong>
             </div>
+
             <div class="row">
-                <!-- Agent -->
+
+                <!-- 👤 Agent -->
                 <div class="col-md-6">
                     <div class="card border-warning shadow-sm">
                         <div class="card-header bg-warning text-dark fw-bold">
@@ -35,7 +51,7 @@
                     </div>
                 </div>
 
-                <!-- TRESOR -->
+                <!-- 🏦 Régisseur -->
                 <div class="col-md-6">
                     <div class="card border-success shadow-sm">
                         <div class="card-header bg-success text-white fw-bold">
@@ -54,14 +70,115 @@
                 </div>
 
             </div>
-            <!-- Footer actions -->
+
+            <!-- 📄 Liste des quittances -->
+            <div class="mt-4">
+
+                <h5 class="fw-bold">
+                    📄 Liste des quittances versées
+                </h5>
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered table-striped table-hover">
+
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>N° Quittance</th>
+                                <th>Date</th>
+                                <th>Client</th>
+                                <th>Produit</th>
+                                <th>Unité</th>
+                                <th>Quantité</th>
+                                <th>Prix</th>
+                                <th>Montant</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                        {% set total = 0 %}
+
+                        {% for q in versement.quittances %}
+
+                            {% set total = total + q.montantTotal %}
+
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ q.numQuittance }}</td>
+                                <td>{{ q.dateUtilisation|date('d/m/Y') }}</td>
+                                <td>{{ q.nomClient }}</td>
+
+                                <td>
+                                    {{ q.produit.nomProduit }}
+                                </td>
+
+                                <td>
+                                    {{ q.produit.uniteMesure ?? '-' }}
+                                </td>
+
+                                <td>{{ q.quantite }}</td>
+
+                                <td>
+                                    {{ q.produit.ristourne ?? 0 }} Ar
+                                </td>
+                                <td>
+                                    <strong>{{ q.montantTotal }} Ar</strong>
+                                </td>
+                                <td>
+                                    {% if q.statut == 'versé' %}
+                                        <span class="badge bg-success">versé</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">{{ q.statut }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="10" class="text-center text-muted">
+                                    Aucune quittance associée à ce versement
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        {% if versement.quittances|length > 0 %}
+                        <tfoot class="table-secondary">
+                            <tr>
+                                <th colspan="8" class="text-end">
+                                    TOTAL
+                                </th>
+                                <th>
+                                    {{ total }} Ar
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+            <!-- 🔙 Actions -->
             <div class="mt-4 d-flex justify-content-between">
                 <a href="{{ path('app_default') }}" class="btn btn-secondary">
                     ⬅ Retour
                 </a>
+                <div>
+                    <a href="{{ path('app_versement_agent_pdf', {'id': versement.id}) }}"
+                    class="btn btn-danger"
+                    target="_blank">
+                        📄 Imprimer PDF
+                    </a>
+                    <a href="{{ path('app_versement_agent') }}" class="btn btn-primary">
+                        📊 Liste des versements
+                    </a>
+                </div>
+
             </div>
+
         </div>
     </div>
-</div>
 
+</div>
 {% endblock %}

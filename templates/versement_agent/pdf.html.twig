@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Versement Agent - Régisseur</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #000;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .box {
+            border: 1px solid #000;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .row {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .col {
+            width: 48%;
+            border: 1px solid #000;
+            padding: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        table, th, td {
+            border: 1px solid #000;
+        }
+
+        th, td {
+            padding: 5px;
+            text-align: center;
+        }
+
+        th {
+            background: #eee;
+        }
+
+        .badge {
+            padding: 2px 6px;
+            border: 1px solid #000;
+        }
+
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+
+        .danger {
+            color: red;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="title">
+    📊 VERSEMENT AGENT → RÉGISSEUR
+</div>
+
+<!-- 🔥 Résumé -->
+<div class="box">
+    💰 Montant versé : <strong>{{ versement.montant }} Ar</strong><br>
+    📊 Écart : <strong>{{ versement.ecart ?? 0 }} Ar</strong><br>
+    🧾 Type : {{ versement.typeVersement }}<br>
+    📅 Date : {{ versement.date|date('d/m/Y') }}
+</div>
+
+<!-- 👤 AGENT / RÉGISSEUR -->
+<div class="row">
+
+    <div class="col">
+        👤 AGENT<br><br>
+        Nom : {{ agent.nom }}<br>
+        Solde : {{ agent.portefeuille }} Ar
+    </div>
+
+    <div class="col">
+        🏦 RÉGISSEUR<br><br>
+        Nom : {{ regisseur.nom }}<br>
+        Solde : {{ regisseur.portefeuille }} Ar
+    </div>
+
+</div>
+
+<!-- 📄 QUITTANCES -->
+<h3>📄 Liste des quittances</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>N°</th>
+            <th>Date</th>
+            <th>Client</th>
+            <th>Produit</th>
+            <th>Qté</th>
+            <th>Montant</th>
+            <th>Statut</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% set total = 0 %}
+
+    {% for q in versement.quittances %}
+
+        {% set total = total + q.montantTotal %}
+
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ q.numQuittance }}</td>
+            <td>{{ q.dateUtilisation|date('d/m/Y') }}</td>
+            <td>{{ q.nomClient }}</td>
+            <td>{{ q.produit.nomProduit }}</td>
+            <td>{{ q.quantite }}</td>
+            <td>{{ q.montantTotal }} Ar</td>
+            <td>
+                {% if q.statut == 'versé' %}
+                    <span class="success">OK</span>
+                {% else %}
+                    <span class="danger">{{ q.statut }}</span>
+                {% endif %}
+            </td>
+        </tr>
+
+    {% else %}
+        <tr>
+            <td colspan="8">Aucune quittance</td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th colspan="6">TOTAL</th>
+            <th colspan="2">{{ total }} Ar</th>
+        </tr>
+    </tfoot>
+
+</table>
+
+<!-- 🔚 FOOTER -->
+<div class="footer">
+    Signature : ______________________
+</div>
+
+</body>
+</html>
