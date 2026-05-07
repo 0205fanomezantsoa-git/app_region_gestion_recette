@@ -38,9 +38,6 @@ class Quittance
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $statut = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $ecart = null;
-
     #[ORM\ManyToOne(inversedBy: 'quittances')]
     private ?LigneVersementAgentVersRegisseur $versement = null;
 
@@ -141,18 +138,6 @@ class Quittance
     public function setStatut(?string $statut): static
     {
         $this->statut = $statut;
-
-        return $this;
-    }
-
-    public function getEcart(): ?float
-    {
-        return $this->ecart;
-    }
-
-    public function setEcart(?float $ecart): static
-    {
-        $this->ecart = $ecart;
 
         return $this;
     }

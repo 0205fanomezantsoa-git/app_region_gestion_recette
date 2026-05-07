@@ -37,6 +37,9 @@ class LigneVersementAgentVersRegisseur
     #[ORM\OneToMany(targetEntity: Quittance::class, mappedBy: 'versement')]
     private Collection $quittances;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $ecart = null;
+
     public function __construct()
     {
         $this->quittances = new ArrayCollection();
@@ -133,6 +136,18 @@ class LigneVersementAgentVersRegisseur
                 $quittance->setVersement(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEcart(): ?float
+    {
+        return $this->ecart;
+    }
+
+    public function setEcart(?float $ecart): static
+    {
+        $this->ecart = $ecart;
 
         return $this;
     }

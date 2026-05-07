@@ -26,6 +26,9 @@ class LigneVersementRegisseurVersTresor
     #[ORM\ManyToOne(inversedBy: 'ligneVersementRegisseurVersTresors')]
     private ?Tresor $tresor = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $ecart = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +78,18 @@ class LigneVersementRegisseurVersTresor
     public function setTresor(?Tresor $tresor): static
     {
         $this->tresor = $tresor;
+
+        return $this;
+    }
+
+    public function getEcart(): ?float
+    {
+        return $this->ecart;
+    }
+
+    public function setEcart(?float $ecart): static
+    {
+        $this->ecart = $ecart;
 
         return $this;
     }
