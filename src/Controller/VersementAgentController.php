@@ -91,7 +91,7 @@ final class VersementAgentController extends AbstractController
             200,
             [
                 'Content-Type' => 'application/pdf',
-                 'Content-Disposition' => 'inline; filename="salaire_'.$versement->getId().'.pdf"',
+                 'Content-Disposition' => 'inline; filename="agent_'.$versement->getId().'.pdf"',
             ]
         );
     }

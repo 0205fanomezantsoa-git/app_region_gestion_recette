@@ -56,7 +56,7 @@
                         {{ app.request.attributes.get('_route') in ['app_versement_agent', 'app_versement_agent_new','app_versement_agent_detail'] ? 'bg-light fw-bold' : '' }}"
                         href="{{ path('app_versement_agent') }}">
                         <i class="ti ti-arrow-right-circle"></i>
-                        <span>Agent → Régisseur</span>
+                        <span>Versement Agent → Régisseur</span>
                     </a>
                 </li>
 
@@ -65,7 +65,7 @@
                         {{ app.request.attributes.get('_route') in ['app_versement_regisseur', 'app_versement_regisseur_new','app_versement_regisseur_detail'] ? 'bg-light fw-bold' : '' }}"
                        href="{{ path('app_versement_regisseur') }}">
                         <i class="ti ti-building-bank"></i>
-                        <span>Régisseur → Trésor</span>
+                        <span>Versement Régisseur → Trésor</span>
                     </a>
                 </li>
                 <!-- ================= AGENTS ================= -->

@@ -117,11 +117,16 @@
                 <a href="{{ path('app_default') }}" class="btn btn-secondary">
                     ⬅ Retour
                 </a>
-
+                <div>
+                <a href="{{ path('app_versement_regisseur_pdf', {'id': versement.id}) }}"
+                    class="btn btn-danger"
+                    target="_blank">
+                        📄 Imprimer PDF
+                </a>
                 <a href="{{ path('app_versement_regisseur') }}" class="btn btn-primary">
                     📊 Liste des versements
                 </a>
-
+                </div>
             </div>
 
         </div>

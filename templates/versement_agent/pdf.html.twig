@@ -81,7 +81,9 @@
 </head>
 
 <body>
-
+<div class="col-md-4 text-center">
+    <img src="{{absolute_url(asset('assets/images/logos/logo.jpeg'))}}" width="100" alt=""/> 
+</div>
 <div class="title">
     📊 VERSEMENT AGENT → RÉGISSEUR
 </div>
@@ -96,19 +98,19 @@
 
 <!-- 👤 AGENT / RÉGISSEUR -->
 <div class="row">
-
     <div class="col">
         👤 AGENT<br><br>
         Nom : {{ agent.nom }}<br>
         Solde : {{ agent.portefeuille }} Ar
     </div>
-
     <div class="col">
         🏦 RÉGISSEUR<br><br>
         Nom : {{ regisseur.nom }}<br>
         Solde : {{ regisseur.portefeuille }} Ar
     </div>
-
+    <div class="col">
+        Carnet de quittance N° : {{ versement.quittances|first.carnetQuittance.idCarnet ?? 'Non défini' }}<br><br>
+    </div>
 </div>
 
 <!-- 📄 QUITTANCES -->

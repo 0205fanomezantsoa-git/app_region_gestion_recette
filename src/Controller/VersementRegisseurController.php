@@ -6,6 +6,7 @@ use App\Entity\LigneVersementRegisseurVersTresor;
 use App\Form\LigneVersementRegisseurType;
 use App\Repository\LigneVersementRegisseurVersTresorRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,10 +67,42 @@ final class VersementRegisseurController extends AbstractController
     #[Route('SGRM/versement/regisseur/{id}', name: 'app_versement_regisseur_detail')]
     public function detail(LigneVersementRegisseurVersTresor $versement): Response
     {
-    return $this->render('versement_regisseur/detail.html.twig', [
-        'versement' => $versement,
-        'regisseur' => $versement->getRegisseur(),
-        'tresor' => $versement->getTresor(),
-    ]);
+        return $this->render('versement_regisseur/detail.html.twig', [
+            'versement' => $versement,
+            'regisseur' => $versement->getRegisseur(),
+            'tresor' => $versement->getTresor(),
+        ]);
     }
+
+    #[Route('/versement/regisseur/{id}/pdf', name: 'app_versement_regisseur_pdf')]
+public function pdf(
+    LigneVersementRegisseurVersTresor $versement,
+    Pdf $snappy
+): Response {
+
+    $html = $this->renderView(
+        'versement_regisseur/pdf.html.twig',
+        [
+            'versement' => $versement,
+            'regisseur' => $versement->getRegisseur(),
+            'tresor' => $versement->getTresor(),
+        ]
+    );
+
+    $pdf = $snappy->getOutputFromHtml(
+        $html,
+        [
+            'enable-local-file-access' => true,
+        ]
+    );
+
+    return new Response(
+        $pdf,
+        200,
+        [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="versement.pdf"',
+        ]
+    );
+}
 }

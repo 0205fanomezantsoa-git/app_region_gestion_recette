@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <title>Versement Régisseur → Trésor</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color:#000;
+        }
+        .title{
+            text-align:center;
+            font-size:20px;
+            font-weight:bold;
+            margin-bottom:20px;
+        }
+        .box{
+            border:1px solid #000;
+            padding:10px;
+            margin-bottom:15px;
+        }
+        .row{
+            width:100%;
+            margin-top:10px;
+        }
+        .col{
+            width:48%;
+            display:inline-block;
+            vertical-align:top;
+            border:1px solid #000;
+            padding:10px;
+            min-height:100px;
+        }
+        .success{
+            color:green;
+            font-weight:bold;
+        }
+        .danger{
+            color:red;
+            font-weight:bold;
+        }
+        .footer{
+            margin-top:40px;
+            text-align:right;
+        }
+    </style>
+</head>
+
+<body>
+<div class="col-md-4 text-center">
+    <img src="{{absolute_url(asset('assets/images/logos/logo.jpeg'))}}" width="100" alt=""/> 
+</div>
+<div class="title">
+    📊 VERSEMENT RÉGISSEUR → TRÉSOR
+</div>
+
+<!-- Résumé -->
+<div class="box">
+
+    💰 Montant versé :
+    <strong>{{ versement.montant ?? 0 }} Ar</strong>
+
+    <br><br>
+
+    📊 Écart :
+
+    {% if versement.ecart is null %}
+
+        Non calculé
+
+    {% elseif versement.ecart == 0 %}
+
+        <span class="success">0 Ar (OK)</span>
+
+    {% elseif versement.ecart > 0 %}
+
+        <span class="danger">
+            +{{ versement.ecart }} Ar (Excédent)
+        </span>
+
+    {% else %}
+
+        <span class="danger">
+            {{ versement.ecart }} Ar (Déficit)
+        </span>
+
+    {% endif %}
+
+    <br><br>
+
+    📅 Date :
+    {{ versement.date|date('d/m/Y') }}
+
+</div>
+
+<!-- Informations -->
+<div class="row">
+
+    <div class="col">
+
+        <strong>👤 Régisseur concerné</strong>
+
+        <br><br>
+
+        Nom :
+        {{ regisseur.nom }}
+
+        <br><br>
+
+        Solde :
+        {{ regisseur.portefeuille }} Ar
+
+    </div>
+
+    <div class="col">
+
+        <strong>🏦 Trésor concerné</strong>
+
+        <br><br>
+
+        Nom :
+        {{ tresor.nom }}
+
+        <br><br>
+
+        Solde :
+        {{ tresor.portefeuille }} Ar
+
+    </div>
+
+</div>
+
+<!-- Analyse -->
+<div class="box" style="margin-top:20px;">
+
+    {% if versement.ecart is not null and versement.ecart != 0 %}
+
+        ⚠ Attention :
+        un écart a été détecté lors du versement.
+
+    {% else %}
+
+        ✔ Versement équilibré
+        (aucune anomalie détectée)
+
+    {% endif %}
+
+</div>
+
+<!-- Signature -->
+<div class="footer">
+
+    Signature :
+
+    <br><br><br>
+
+    ________________________
+
+</div>
+</body>
+</html>
