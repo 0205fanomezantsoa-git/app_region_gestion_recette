@@ -27,10 +27,10 @@ class Localite
     #[ORM\OneToMany(targetEntity: Agent::class, mappedBy: 'localite')]
     private Collection $agents;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne]
     private ?Regisseur $regisseurs = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne]
     private ?Tresor $tresor = null;
 
     public function __construct()

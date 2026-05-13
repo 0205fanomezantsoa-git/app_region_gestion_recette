@@ -1,16 +1,20 @@
 {% extends "base.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+{% endblock %}
+
 {% block body %}
 
 <div class="container-fluid py-3">
 
     <div class="card shadow border-0">
-
-        <div class="card-body" style="max-height: 650px; overflow-y: auto;">
+        <div class="card-body">
 
             <!-- HEADER -->
             <div class="d-flex justify-content-between align-items-center mb-3">
-
                 <div>
                     <h3 class="fw-bold text-primary mb-0">
                         📋 Liste des agents percepteurs
@@ -24,105 +28,106 @@
             <!-- TABLE -->
             <div class="table-responsive">
 
-                <table class="table table-hover align-middle text-nowrap">
+                <table id="tableAgents"
+                       class="table table-hover table-striped table-bordered align-middle">
 
                     <thead class="table-light">
                         <tr>
-                            <th>👤 Agent</th>
-                            <th>📍 Localité</th>
-                            <th>📒 Carnet quittance</th>
-                            <th>📒 Reste</th>
-                            <th>🏦 Régisseur</th>
-                            <th>💰 Solde</th>
-                            <th>⚙️ Action</th>
+                            <th>Agent</th>
+                            <th>Localité</th>
+                            <th>Carnet</th>
+                            <th>Reste</th>
+                            <th>Solde</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
 
                     <tbody>
 
-                        {% for agent in agents %}
+                    {% for agent in agents %}
 
-                            {# carnet actif #}
-                            {% set hasCarnet = false %}
+                        {% set hasCarnet = false %}
 
-                            {% for carnetQuittance in agent.carnetQuittances %}
-                                {% if carnetQuittance.statut == "En cours" %}
-                                    {% set hasCarnet = true %}
-                                {% endif %}
-                            {% endfor %}
+                        {% for carnetQuittance in agent.carnetQuittances %}
+                            {% if carnetQuittance.statut == "En cours" %}
+                                {% set hasCarnet = true %}
+                            {% endif %}
+                        {% endfor %}
 
-                            <tr>
+                        <tr>
 
-                                <!-- AGENT -->
-                                <td>
-                                    <div>
-                                        <h6 class="fw-bold mb-0">{{ agent.nom }}</h6>
-                                        <small class="text-muted">📞 {{ agent.telephone }}</small>
-                                    </div>
-                                </td>
+                            <!-- AGENT -->
+                            <td>
+                                <strong>{{ agent.nom }}</strong><br>
+                                <small class="text-muted">
+                                    {{ agent.telephone }}
+                                </small>
+                            </td>
 
-                                <!-- LOCALITE -->
-                                <td>
-                                    <span class="badge bg-secondary">
-                                        {{ agent.localite.nom }}
-                                    </span>
-                                </td>
+                            <!-- LOCALITE -->
+                            <td>{{ agent.localite.nom }}</td>
 
-                                <!-- CARNET -->
-                                <td>
-                                    {% if hasCarnet %}
+                            <!-- CARNET -->
+                            <td>
+                                {% set hasEnCours = false %}
 
-                                        {% for carnetQuittance in agent.carnetQuittances %}
-                                            {% if carnetQuittance.statut == "En cours" %}
-                                                <span class="badge bg-warning">
-                                                    {{ carnetQuittance.idCarnet }} (en cours)
-                                                </span>
-                                            {% endif %}
-                                        {% endfor %}
+                                {% if agent.carnetQuittances is not empty %}
+                                    {% for carnetQuittance in agent.carnetQuittances %}
+                                        {% if carnetQuittance.statut == "En cours" %}
+                                            {% set hasEnCours = true %}
+                                            <span class="badge bg-warning">
+                                                {{ carnetQuittance.idCarnet }}
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
 
-                                    {% else %}
+                                    {% if not hasEnCours %}
                                         <span class="badge bg-danger">
                                             Épuisé
                                         </span>
                                     {% endif %}
-                                </td>
-                                <td>
-                                    <span class="badge bg-dark">
-                                        {{ agent.carnetQuittances|last.nbQuittanceRestant }}
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        Non affecté
                                     </span>
-                                </td>
+                                {% endif %}
+                            </td>
 
-                                <!-- REGISSEUR -->
-                                <td>
-                                    <span class="fw-semibold">
-                                        {{ agent.regisseur.nom }}
+                            <!-- RESTE -->
+                            <td>
+                                {% set lastQuittance = agent.carnetQuittances is not empty
+                                    ? agent.carnetQuittances|last
+                                    : null %}
+
+                                <span class="badge bg-dark">
+                                    {{ lastQuittance ? lastQuittance.nbQuittanceRestant : 0 }}
+                                </span>
+                            </td>
+
+                            <!-- SOLDE -->
+                            <td>
+                                <span class="badge bg-primary">
+                                    {{ agent.portefeuille|number_format(2, ',', ' ') }} Ar
+                                </span>
+                            </td>
+
+                            <!-- ACTION -->
+                            <td>
+                                {% if hasCarnet %}
+                                    <a href="{{ path('app_quittance_new', {id: agent.id}) }}"
+                                       class="btn btn-sm btn-success">
+                                        ➕ Quittance
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">
+                                        Aucune action
                                     </span>
-                                </td>
+                                {% endif %}
+                            </td>
 
-                                <!-- SOLDE -->
-                                <td>
-                                    <span class="badge bg-primary fs-6">
-                                        {{ agent.portefeuille|number_format(2, ',', ' ') }} Ar
-                                    </span>
-                                </td>
+                        </tr>
 
-                                <!-- ACTION -->
-                                <td>
-
-                                    {% if hasCarnet %}
-                                        <a href="{{ path('app_quittance_new', {id: agent.id}) }}"
-                                           class="btn btn-sm btn-success">
-                                            ➕ Quittance
-                                        </a>
-                                    {% else %}
-                                        <span class="text-muted">Aucune action</span>
-                                    {% endif %}
-
-                                </td>
-
-                            </tr>
-
-                        {% endfor %}
+                    {% endfor %}
 
                     </tbody>
 
@@ -131,9 +136,38 @@
             </div>
 
         </div>
-
     </div>
 
 </div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#tableAgents').DataTable({
+                responsive: true,
+                pageLength: 3,
+                order: [[0, 'asc']],
+                language: {
+                    search: "🔍 Recherche :",
+                    lengthMenu: "Afficher _MENU_ lignes",
+                    info: "Affichage de _START_ à _END_ sur _TOTAL_ agents",
+                    paginate: {
+                        previous: "Précédent",
+                        next: "Suivant"
+                    },
+                    zeroRecords: "Aucun agent trouvé"
+                }
+            });
+        });
+    </script>
 
 {% endblock %}

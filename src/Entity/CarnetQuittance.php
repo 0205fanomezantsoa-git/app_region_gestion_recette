@@ -16,7 +16,7 @@ class CarnetQuittance
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 225)]
     private ?string $idCarnet = null;
 
     #[ORM\Column]

@@ -6,117 +6,199 @@
 
     <style>
 
-        body {
+        body{
             font-family: Arial, sans-serif;
-            font-size: 12px;
-            color: #000;
+            font-size:12px;
+            color:#000;
+            margin:20px;
         }
 
-        .title {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 20px;
+        .header{
+            text-align:center;
+            margin-bottom:20px;
         }
 
-        .box {
-            border: 1px solid #000;
-            padding: 10px;
-            margin-bottom: 10px;
+        .logo{
+            width:90px;
         }
 
-        .row {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
+        .logo-center{
+            width:110px;
+            margin:10px auto;
+            display:block;
         }
 
-        .col {
-            width: 48%;
-            border: 1px solid #000;
-            padding: 10px;
+        .title{
+            text-align:center;
+            font-size:18px;
+            font-weight:bold;
+            margin-top:10px;
+            margin-bottom:20px;
+            border-bottom:2px solid #000;
+            padding-bottom:10px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
+        .box{
+            border:1px solid #000;
+            padding:12px;
+            margin-bottom:15px;
         }
 
-        table, th, td {
-            border: 1px solid #000;
+        .section-title{
+            font-weight:bold;
+            margin-bottom:8px;
+            font-size:14px;
         }
 
-        th, td {
-            padding: 5px;
-            text-align: center;
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:15px;
         }
 
-        th {
-            background: #eee;
+        table, th, td{
+            border:1px solid #000;
         }
 
-        .badge {
-            padding: 2px 6px;
-            border: 1px solid #000;
+        th, td{
+            padding:6px;
+            text-align:center;
         }
 
-        .success {
-            color: green;
-            font-weight: bold;
+        th{
+            background:#eaeaea;
         }
 
-        .danger {
-            color: red;
-            font-weight: bold;
+        .success{
+            color:green;
+            font-weight:bold;
         }
 
-        .footer {
-            margin-top: 20px;
-            text-align: right;
+        .danger{
+            color:red;
+            font-weight:bold;
+        }
+
+        .footer{
+            margin-top:40px;
+            text-align:right;
         }
 
     </style>
-
 </head>
 
 <body>
-<div class="col-md-4 text-center">
-    <img src="{{absolute_url(asset('assets/images/logos/logo.jpeg'))}}" width="100" alt=""/> 
+
+<!-- HEADER LOGOS -->
+
+<div class="header">
+    <!-- logo centre -->
+    <img src="{{ absolute_url(asset('assets/images/logos/logo_centre.png')) }}"
+         class="logo-center">
+    <!-- logo gauche -->
+    <img src="{{ absolute_url(asset('assets/images/logos/logo.jpeg')) }}"
+         class="logo"  style="
+            position:absolute;
+            left:0;
+            top:0;
+            width:90px;
+        ">
+
 </div>
+
 <div class="title">
-    📊 VERSEMENT AGENT → RÉGISSEUR
+    VERSEMENT AGENT → RÉGISSEUR
 </div>
 
-<!-- 🔥 Résumé -->
+<!-- Résumé -->
+
 <div class="box">
-    💰 Montant versé : <strong>{{ versement.montant }} Ar</strong><br>
-    📊 Écart : <strong>{{ versement.ecart ?? 0 }} Ar</strong><br>
-    🧾 Type : {{ versement.typeVersement }}<br>
-    📅 Date : {{ versement.date|date('d/m/Y') }}
+
+    <div class="section-title">RÉSUMÉ DU VERSEMENT</div>
+
+    Montant versé :
+    <strong>{{ versement.montant }} Ar</strong><br><br>
+
+    Écart :
+    <strong>{{ versement.ecart ?? 0 }} Ar</strong><br><br>
+
+    Type :
+    {{ versement.typeVersement }}<br><br>
+
+    Date :
+    {{ versement.date|date('d/m/Y') }}
+
 </div>
 
-<!-- 👤 AGENT / RÉGISSEUR -->
-<div class="row">
-    <div class="col">
-        👤 AGENT<br><br>
-        Nom : {{ agent.nom }}<br>
-        Solde : {{ agent.portefeuille }} Ar
+<div class="box">
+
+    <div class="section-title">
+        INFORMATIONS DES RESPONSABLES
     </div>
-    <div class="col">
-        🏦 RÉGISSEUR<br><br>
-        Nom : {{ regisseur.nom }}<br>
-        Solde : {{ regisseur.portefeuille }} Ar
-    </div>
-    <div class="col">
-        Carnet de quittance N° : {{ versement.quittances|first.carnetQuittance.idCarnet ?? 'Non défini' }}<br><br>
-    </div>
+
+    <table style="width:100%; border:none;">
+
+        <tr style="border:none;">
+
+            <!-- AGENT -->
+            <td style="width:50%; border:none; vertical-align:top; padding-right:20px;">
+
+                <strong>AGENT CONCERNÉ</strong>
+
+                <br><br>
+
+                Nom :
+                {{ agent.nom }}
+
+                <br><br>
+
+                Solde :
+                {{ agent.portefeuille }} Ar
+
+            </td>
+
+            <!-- REGISSEUR -->
+            <td style="width:50%; border:none; vertical-align:top;">
+
+                <strong>RÉGISSEUR CONCERNÉ</strong>
+
+                <br><br>
+
+                Nom :
+                {{ regisseur.nom }}
+
+                <br><br>
+
+                Solde :
+                {{ regisseur.portefeuille }} Ar
+
+            </td>
+
+        </tr>
+
+    </table>
+
 </div>
 
-<!-- 📄 QUITTANCES -->
-<h3>📄 Liste des quittances</h3>
+<!-- CARNET -->
+
+<div class="box">
+
+    <div class="section-title">CARNET DE QUITTANCE</div>
+
+    N° :
+    {{ versement.quittances|first.carnetQuittance.idCarnet ?? 'Non défini' }}
+
+</div>
+
+<!-- QUITTANCES -->
+
+<div class="section-title">
+    LISTE DES QUITTANCES
+</div>
 
 <table>
+
     <thead>
         <tr>
             <th>#</th>
@@ -148,7 +230,7 @@
             <td>{{ q.montantTotal }} Ar</td>
             <td>
                 {% if q.statut == 'versé' %}
-                    <span class="success">OK</span>
+                    <span class="success">VERSÉ</span>
                 {% else %}
                     <span class="danger">{{ q.statut }}</span>
                 {% endif %}
@@ -172,9 +254,20 @@
 
 </table>
 
-<!-- 🔚 FOOTER -->
+<!-- SIGNATURE -->
+
 <div class="footer">
-    Signature : ______________________
+
+    Fait le : {{ "now"|date("d/m/Y") }}
+
+    <br><br><br>
+
+    Signature & Cachet
+
+    <br><br><br>
+
+    ________________________
+
 </div>
 
 </body>
