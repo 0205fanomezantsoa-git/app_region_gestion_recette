@@ -29,6 +29,9 @@ class LigneVersementRegisseurVersTresor
     #[ORM\Column(nullable: true)]
     private ?float $ecart = null;
 
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $statut = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +93,18 @@ class LigneVersementRegisseurVersTresor
     public function setEcart(?float $ecart): static
     {
         $this->ecart = $ecart;
+
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?string $statut): static
+    {
+        $this->statut = $statut;
 
         return $this;
     }

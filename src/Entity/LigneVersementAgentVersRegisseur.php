@@ -40,6 +40,9 @@ class LigneVersementAgentVersRegisseur
     #[ORM\Column(nullable: true)]
     private ?float $ecart = null;
 
+    #[ORM\Column(nullable: true ,length: 10)]
+    private ?string $statut = null;
+
     public function __construct()
     {
         $this->quittances = new ArrayCollection();
@@ -148,6 +151,18 @@ class LigneVersementAgentVersRegisseur
     public function setEcart(?float $ecart): static
     {
         $this->ecart = $ecart;
+
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): static
+    {
+        $this->statut = $statut;
 
         return $this;
     }

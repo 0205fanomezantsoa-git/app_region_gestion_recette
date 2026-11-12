@@ -24,7 +24,7 @@ class Quittance
     private ?string $nomClient = null;
 
     #[ORM\Column]
-    private ?int $quantite = null;
+    private ?float $quantite = null;
 
     #[ORM\Column]
     private ?float $montantTotal = null;
@@ -82,12 +82,12 @@ class Quittance
         return $this;
     }
 
-    public function getQuantite(): ?int
+    public function getQuantite(): ?float
     {
         return $this->quantite;
     }
 
-    public function setQuantite(int $quantite): static
+    public function setQuantite(float $quantite): static
     {
         $this->quantite = $quantite;
 

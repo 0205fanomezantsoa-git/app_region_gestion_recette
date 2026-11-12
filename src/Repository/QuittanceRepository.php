@@ -22,9 +22,8 @@ class QuittanceRepository extends ServiceEntityRepository
             ->join('q.carnetQuittance', 'c')
             ->join('c.agent', 'a')
             ->where('a.id = :agent')
-            ->andWhere('q.statut = :statut')
+            ->andWhere('q.statut IS NULL')
             ->setParameter('agent', $agentId)
-            ->setParameter('statut', 'non_versé')
             ->orderBy('q.id', 'ASC')
             ->getQuery()
             ->getResult();

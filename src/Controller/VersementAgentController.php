@@ -18,7 +18,7 @@ final class VersementAgentController extends AbstractController
     public function index(LigneVersementAgentVersRegisseurRepository $repository): Response
     {
         $data = $repository->findJournalAgentRegisseur();
-
+     
         return $this->render('versement_agent/index.html.twig', [
             'data' => $data
         ]);

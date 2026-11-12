@@ -27,6 +27,7 @@ class VersementAgentService
             $regisseur = $versement->getRegisseur();
             // 🔍 récupérer quittances non versées
             $quittances = $this->quittanceRepository->findNonVerseByAgent($agent->getId());
+            
             if (count($quittances) === 0) {
                 throw new \Exception("Aucune quittance non versée.");
             }

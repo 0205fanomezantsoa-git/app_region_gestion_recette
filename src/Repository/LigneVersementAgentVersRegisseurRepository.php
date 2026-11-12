@@ -68,7 +68,7 @@ class LigneVersementAgentVersRegisseurRepository extends ServiceEntityRepository
     public function findJournalAgentRegisseur()
     {
         return $this->createQueryBuilder('v')
-            ->select('v.id AS id, v.date AS date, v.typeVersement AS type, a.nom AS agent, r.nom AS regisseur, v.montant')
+            ->select('v.id AS id, v.date AS date, v.typeVersement AS type, a.nom AS agent, r.nom AS regisseur, v.montant, v.statut')
             ->join('v.agent', 'a')
             ->join('v.regisseur', 'r')
             ->orderBy('v.date', 'DESC')

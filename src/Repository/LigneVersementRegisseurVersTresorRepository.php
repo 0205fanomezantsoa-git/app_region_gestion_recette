@@ -54,7 +54,7 @@ class LigneVersementRegisseurVersTresorRepository extends ServiceEntityRepositor
     public function findJournalRegisseurTresor()
     {
     return $this->createQueryBuilder('v')
-        ->select('v.id AS id, v.date AS date, r.nom AS regisseur, t.nom AS tresor, v.montant')
+        ->select('v.id AS id, v.date AS date, r.nom AS regisseur, t.nom AS tresor, v.montant,v.statut')
         ->join('v.regisseur', 'r')
         ->join('v.tresor', 't')
         ->orderBy('v.date', 'DESC')

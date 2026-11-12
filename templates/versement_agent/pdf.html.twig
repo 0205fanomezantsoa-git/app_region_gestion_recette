@@ -1,274 +1,326 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Versement Agent - Régisseur</title>
+<meta charset="UTF-8">
+<title>État de versement Agent - Régisseur</title>
 
-    <style>
+<style>
 
-        body{
-            font-family: Arial, sans-serif;
-            font-size:12px;
-            color:#000;
-            margin:20px;
-        }
+@page{
+    margin:20px 20px 40px 20px;
+}
 
-        .header{
-            text-align:center;
-            margin-bottom:20px;
-        }
+body{
+    font-family: Arial, sans-serif;
+    font-size:12px;
+    color:#000;
+    margin:0;
+}
 
-        .logo{
-            width:90px;
-        }
+/* ================= HEADER ================= */
 
-        .logo-center{
-            width:110px;
-            margin:10px auto;
-            display:block;
-        }
+.header{
+    position:relative;
+    height:180px;
+    margin-bottom:20px;
+}
 
-        .title{
-            text-align:center;
-            font-size:18px;
-            font-weight:bold;
-            margin-top:10px;
-            margin-bottom:20px;
-            border-bottom:2px solid #000;
-            padding-bottom:10px;
-        }
+.logo-left{
+    position:absolute;
+    left:0;
+    top:40px;
+    width:160px;
+    text-align:center;
+}
 
-        .box{
-            border:1px solid #000;
-            padding:12px;
-            margin-bottom:15px;
-        }
+.logo-center{
+    text-align:center;
+}
 
-        .section-title{
-            font-weight:bold;
-            margin-bottom:8px;
-            font-size:14px;
-        }
+.logo-right{
+    position:absolute;
+    right:0;
+    top:40px;
+    width:160px;
+    text-align:center;
+}
 
-        table{
-            width:100%;
-            border-collapse:collapse;
-            margin-top:15px;
-        }
+.header-title{
+    margin-top:10px;
+    font-size:14px;
+    font-weight:bold;
+    text-transform:uppercase;
+    text-align:center;
+}
 
-        table, th, td{
-            border:1px solid #000;
-        }
+/* ================= TITRES ================= */
 
-        th, td{
-            padding:6px;
-            text-align:center;
-        }
+.section-title{
+    font-weight:bold;
+    font-size:13px;
+    text-decoration:underline;
+    margin-bottom:8px;
+}
 
-        th{
-            background:#eaeaea;
-        }
+strong{
+    font-weight:bold;
+}
 
-        .success{
-            color:green;
-            font-weight:bold;
-        }
+/* ================= TABLE ================= */
 
-        .danger{
-            color:red;
-            font-weight:bold;
-        }
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
 
-        .footer{
-            margin-top:40px;
-            text-align:right;
-        }
+thead{
+    display:table-header-group;
+}
 
-    </style>
+tbody{
+    display:table-row-group;
+}
+
+tr{
+    page-break-inside:avoid;
+}
+
+table, th, td{
+    border:1px solid #000;
+}
+
+th{
+    background:#efefef;
+    padding:7px;
+}
+
+td{
+    padding:6px;
+    text-align:center;
+}
+
+/* ================= STATUS ================= */
+
+.success{
+    color:green;
+    font-weight:bold;
+}
+
+.danger{
+    color:red;
+    font-weight:bold;
+}
+
+/* ================= FOOTER ================= */
+
+.footer{
+    margin-top:10px;
+}
+
+.signature{
+    width:100%;
+    margin-top:10px;
+}
+
+.left-sign{
+    width:45%;
+    float:left;
+    text-align:center;
+}
+
+.right-sign{
+    width:45%;
+    float:right;
+    text-align:center;
+}
+
+.clear{
+    clear:both;
+}
+
+.footer-fixed{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    text-align:center;
+    font-size:11px;
+    border-top:1px solid #000;
+    padding-top:5px;
+}
+
+</style>
 </head>
 
 <body>
 
-<!-- HEADER LOGOS -->
-
+<!-- ================= HEADER ================= -->
 <div class="header">
-    <!-- logo centre -->
-    <img src="{{ absolute_url(asset('assets/images/logos/logo_centre.png')) }}"
-         class="logo-center">
-    <!-- logo gauche -->
-    <img src="{{ absolute_url(asset('assets/images/logos/logo.jpeg')) }}"
-         class="logo"  style="
-            position:absolute;
-            left:0;
-            top:0;
-            width:90px;
-        ">
+    <!-- gauche -->
+    <div class="logo-left">
+        <img src="{{ absolute_url(asset('assets/images/logos/logo_mid.jpg')) }}"
+             style="width:95px;">
+        <div style="font-size:9px; line-height:1.2; margin-top:5px;">
+            <strong>
+                MINISTÈRE DE L’INTÉRIEUR<br>
+                ET DE LA DÉCENTRALISATION
+            </strong>
+            <br><br>
+            …………………………
+            <br><br>
+            <strong>RÉGION MELAKY</strong>
+        </div>
 
-</div>
-
-<div class="title">
-    VERSEMENT AGENT → RÉGISSEUR
-</div>
-
-<!-- Résumé -->
-
-<div class="box">
-
-    <div class="section-title">RÉSUMÉ DU VERSEMENT</div>
-
-    Montant versé :
-    <strong>{{ versement.montant }} Ar</strong><br><br>
-
-    Écart :
-    <strong>{{ versement.ecart ?? 0 }} Ar</strong><br><br>
-
-    Type :
-    {{ versement.typeVersement }}<br><br>
-
-    Date :
-    {{ versement.date|date('d/m/Y') }}
-
-</div>
-
-<div class="box">
-
-    <div class="section-title">
-        INFORMATIONS DES RESPONSABLES
     </div>
 
-    <table style="width:100%; border:none;">
+    <!-- centre -->
+    <div class="logo-center">
 
-        <tr style="border:none;">
+        <img src="{{ absolute_url(asset('assets/images/logos/logo_centre.png')) }}"
+             style="width:150px;">
 
-            <!-- AGENT -->
-            <td style="width:50%; border:none; vertical-align:top; padding-right:20px;">
+        <div class="header-title">
+            ÉTAT DE VERSEMENT EFFECTUÉ À LA TRÉSORERIE GÉNÉRALE DE MAINTIRANO
+        </div>
 
-                <strong>AGENT CONCERNÉ</strong>
+    </div>
 
-                <br><br>
+    <!-- droite -->
+    <div class="logo-right">
 
-                Nom :
-                {{ agent.nom }}
+        <img src="{{ absolute_url(asset('assets/images/logos/logo.jpeg')) }}"
+             style="width:100px;">
 
-                <br><br>
-
-                Solde :
-                {{ agent.portefeuille }} Ar
-
-            </td>
-
-            <!-- REGISSEUR -->
-            <td style="width:50%; border:none; vertical-align:top;">
-
-                <strong>RÉGISSEUR CONCERNÉ</strong>
-
-                <br><br>
-
-                Nom :
-                {{ regisseur.nom }}
-
-                <br><br>
-
-                Solde :
-                {{ regisseur.portefeuille }} Ar
-
-            </td>
-
-        </tr>
-
-    </table>
+    </div>
 
 </div>
 
-<!-- CARNET -->
+<!-- ================= INFOS ================= -->
 
-<div class="box">
+<div>
+    <strong>
+        PRODUITS DE RISTOURNE : 7717<br>
+        SOA : 20-17-2-000-41301<br>
+        CIN: 421 012 002 761
+    </strong>
+</div>
 
+<br>
+
+<div>
+    <div class="section-title">AGENT</div>
+
+    Nom : {{ agent.nom }}<br>
+    Localité : {{ agent.localite.district.nom }} - {{ agent.localite.nom }}
+</div>
+
+<br>
+
+<div>
     <div class="section-title">CARNET DE QUITTANCE</div>
 
-    N° :
-    {{ versement.quittances|first.carnetQuittance.idCarnet ?? 'Non défini' }}
-
+    N° Carnet :
+    <strong>
+        {{ versement.quittances|first.carnetQuittance.idCarnet ?? 'Non défini' }}
+    </strong>
+    <br>
+    Statut :
+    <strong>
+        {{ versement.quittances|first.carnetQuittance.statut}}
+    </strong> 
 </div>
 
-<!-- QUITTANCES -->
+<!-- ================= TABLEAU ================= -->
 
-<div class="section-title">
-    LISTE DES QUITTANCES
+<div style="text-align:center; margin-top:20px;">
+    <div class="section-title">
+        LISTE DES QUITTANCES CONCERNÉES
+    </div>
 </div>
 
 <table>
 
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>N°</th>
-            <th>Date</th>
-            <th>Client</th>
-            <th>Produit</th>
-            <th>Qté</th>
-            <th>Montant</th>
-            <th>Statut</th>
-        </tr>
-    </thead>
+<thead>
+<tr>
+    <th>#</th>
+    <th>N° quittance</th>
+    <th>Date</th>
+    <th>Client</th>
+    <th>Produit</th>
+    <th>Qté</th>
+    <th>Montant</th>
+    <th>Statut</th>
+</tr>
+</thead>
 
-    <tbody>
+<tbody>
 
-    {% set total = 0 %}
+{% set total = 0 %}
 
-    {% for q in versement.quittances %}
+{% for q in versement.quittances %}
 
-        {% set total = total + q.montantTotal %}
+    {% set total = total + q.montantTotal %}
 
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ q.numQuittance }}</td>
-            <td>{{ q.dateUtilisation|date('d/m/Y') }}</td>
-            <td>{{ q.nomClient }}</td>
-            <td>{{ q.produit.nomProduit }}</td>
-            <td>{{ q.quantite }}</td>
-            <td>{{ q.montantTotal }} Ar</td>
-            <td>
-                {% if q.statut == 'versé' %}
-                    <span class="success">VERSÉ</span>
-                {% else %}
-                    <span class="danger">{{ q.statut }}</span>
-                {% endif %}
-            </td>
-        </tr>
+<tr>
+    <td>{{ loop.index }}</td>
+    <td>{{ q.numQuittance }}</td>
+    <td>{{ q.dateUtilisation|date('d/m/Y') }}</td>
+    <td>{{ q.nomClient }}</td>
+    <td>{{ q.produit.nomProduit }}</td>
+    <td>{{ q.quantite }} {{ q.produit.uniteMesure }}</td>
+    <td>{{ q.montantTotal|number_format(0, ',', ' ') }} Ar</td>
+    <td>
+        {% if q.statut == 'versé' %}
+            <span class="success">VERSÉ</span>
+        {% else %}
+            <span class="danger">{{ q.statut }}</span>
+        {% endif %}
+    </td>
+</tr>
 
-    {% else %}
-        <tr>
-            <td colspan="8">Aucune quittance</td>
-        </tr>
-    {% endfor %}
+{% else %}
 
-    </tbody>
+<tr>
+    <td colspan="8">Aucune quittance disponible</td>
+</tr>
 
-    <tfoot>
-        <tr>
-            <th colspan="6">TOTAL</th>
-            <th colspan="2">{{ total }} Ar</th>
-        </tr>
-    </tfoot>
+{% endfor %}
 
+<!-- total unique -->
+<tr>
+    <th colspan="6">TOTAL GÉNÉRAL</th>
+    <th colspan="2">
+        {{ total|number_format(0, ',', ' ') }} Ar
+    </th>
+</tr>
+</tbody>
 </table>
 
-<!-- SIGNATURE -->
+<!-- ================= FOOTER ================= -->
 
 <div class="footer">
+    <p>
+        Arrêté le présent état à la somme de :
+        <strong>{{ total|lettres }} Ariary</strong>
+    </p>
 
-    Fait le : {{ "now"|date("d/m/Y") }}
+    <div style="text-align:right;">
+        Maintirano, le {{ versement.date |date("d/m/Y") }}
+    </div>
 
-    <br><br><br>
+    <div class="signature">
 
-    Signature & Cachet
+        <div class="left-sign">
+            Vu et vérifié exact
+        </div>
 
-    <br><br><br>
+        <div class="right-sign">
+            Le Régisseur
+        </div>
 
-    ________________________
-
+        <div class="clear"></div>
+    </div>
 </div>
-
 </body>
 </html>

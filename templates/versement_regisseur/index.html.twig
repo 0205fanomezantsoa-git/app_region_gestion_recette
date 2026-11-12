@@ -34,6 +34,7 @@
                     <th>Régisseur</th>
                     <th>Trésor</th>
                     <th>Montant</th>
+                    <th>OR</th>
                     <th></th>
                 </tr>
             </thead>
@@ -47,6 +48,7 @@
                         <td class="fw-bold text-primary">
                             {{ d.montant|number_format(0, ',', ' ') }} Ar
                         </td>
+                        <td>{{d.statut ? 'oui' : 'non'}}</td>
                         <td class="text-center">
                             <a href="{{ path('app_versement_regisseur_detail', {id: d.id}) }}"
                             class="btn btn-sm btn-info"
